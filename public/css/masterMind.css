@@ -1,0 +1,57 @@
+body {
+  font-family: sans-serif;
+  height: 100vh;
+  width: 100%;
+  background-color: #0d0433;
+}
+
+#wholeDisplay {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+#masterMindBoard {
+  padding: 15px;
+  margin: auto;
+  background-color: #ffb500;
+  height: 50vw;
+  width: 30vw;
+  border-radius: 5px;
+}
+
+.patternDiv {
+  padding-top: 13px;
+  display: flex;
+  width: fit-content;
+  margin-left: 15px;
+  height: 6%;
+  width: 65%;
+}
+
+#secretPattern {
+  background-color: #eed699;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.colorBox {
+  width: 10%;
+  height: 60%;
+  margin-left: 20px;
+  border-radius: 50%;
+  border: 1px solid black;
+}
+
+.secretBox {
+  background-color: lightgray;
+}
+
+.patternPlacingDiv {
+  margin-bottom: 5px;
+}
+
+.boxExceptSecretBox {
+  cursor: pointer;
+  box-shadow: lightslategray 1.5px 1.5px 1.5px;
+}
