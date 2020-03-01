@@ -26,18 +26,17 @@ body {
   width: fit-content;
   margin-left: 15px;
   height: 6%;
-  width: 65%;
+  width: 95%;
 }
 
 #secretPattern {
-  background-color: #eed699;
   border-radius: 8px;
   margin-bottom: 10px;
 }
 
 .colorBox {
-  width: 10%;
-  height: 60%;
+  width: 7%;
+  height: 55%;
   margin-left: 20px;
   border-radius: 50%;
   border: 1px solid black;
@@ -53,5 +52,13 @@ body {
 
 .boxExceptSecretBox {
   cursor: pointer;
-  box-shadow: lightslategray 1.5px 1.5px 1.5px;
+  box-shadow: rgb(110, 110, 105) 1.5px 1.5px 1.5px;
+}
+
+.hints {
+  height: 40%;
+  width: 3%;
+  margin-top: 5px;
+  margin-left: 15px;
+  border-radius: 50%;
 }
