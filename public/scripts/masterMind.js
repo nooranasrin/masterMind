@@ -13,7 +13,7 @@ const selectRandomBox = function(count, hindBoxes, color) {
 
 const showGameStatus = function(status, className) {
   const { correct, wrongPlace, wrong } = status;
-  let hindBoxes = [...document.querySelectorAll(`.${className}Hints`)];
+  let hindBoxes = [...document.getElementsByClassName(`${className}Hints`)];
   hindBoxes = selectRandomBox(correct, hindBoxes, 'black');
   hindBoxes = selectRandomBox(wrongPlace, hindBoxes, 'grey');
   hindBoxes = selectRandomBox(wrong, hindBoxes, 'white');
@@ -43,7 +43,7 @@ const initializeGame = function() {
 
 const sendColors = function() {
   const className = localStorage.getItem('className');
-  const boxes = document.querySelectorAll(`.${className}`);
+  const boxes = document.getElementsByClassName(className);
   const colors = [...boxes].map(box => box.style.backgroundColor);
   if (colors.includes('')) return;
   sendXHR('POST', 'checkWinStatus', showGameStatus, colors, className);
