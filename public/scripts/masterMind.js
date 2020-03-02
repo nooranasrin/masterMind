@@ -13,7 +13,7 @@ const selectRandomBox = function(count, hindBoxes, color) {
 
 const showGameStatus = function(status, className) {
   const { correct, wrongPlace, wrong } = status;
-  let hindBoxes = [...document.getElementsByClassName(`${className}Hints`)];
+  let hindBoxes = [...document.querySelectorAll(`.${className}Hints`)];
   hindBoxes = selectRandomBox(correct, hindBoxes, 'black');
   hindBoxes = selectRandomBox(wrongPlace, hindBoxes, 'grey');
   hindBoxes = selectRandomBox(wrong, hindBoxes, 'white');
@@ -37,18 +37,25 @@ const sendXHR = (method, url, callback, data, args) => {
   };
 };
 
+const makeTheCurrentRowActive = function(row) {
+  const currentRow = document.getElementById(`${row}`);
+  currentRow.classList.add('pointerEventsAll');
+};
+
 const initializeGame = function() {
   sendXHR('GET', 'initialize', () => {});
+  localStorage.setItem('row', 1);
+  makeTheCurrentRowActive(localStorage.getItem('row'));
 };
 
 const sendColors = function() {
   const className = localStorage.getItem('className');
-  const boxes = document.getElementsByClassName(className);
+  const boxes = document.querySelectorAll(`.${className}`);
   const colors = [...boxes].map(box => box.style.backgroundColor);
   if (colors.includes('')) return;
   sendXHR('POST', 'checkWinStatus', showGameStatus, colors, className);
   const button = document.getElementById('try');
-  button.parentNode.classList.add('pointerEvents');
+  button.parentNode.classList.add('pointerEventsNone');
   button.parentNode.removeChild(button);
 };
 
