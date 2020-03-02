@@ -1,3 +1,7 @@
+const showGameStatus = function(responseText) {
+  console.log(responseText);
+};
+
 const sendXHR = (method, url, callback, data) => {
   const req = new XMLHttpRequest();
   req.open(method, url);
@@ -23,6 +27,11 @@ const initializeGame = function() {
 const changeColor = function() {
   const color = localStorage.getItem('color');
   event.target.style.backgroundColor = color;
+  const className = event.target.className.split(' ')[2];
+  const boxes = document.querySelectorAll(`.${className}`);
+  const colors = [...boxes].map(box => box.style.backgroundColor);
+  if (!colors.includes(''))
+    sendXHR('POST', 'checkWinStatus', showGameStatus, colors);
 };
 
 const storeSelectedColor = function() {
