@@ -3,6 +3,7 @@ const selectRandomBox = function(count, hindBoxes, color) {
   let boxes = hindBoxes;
   while (num > 0) {
     const index = Math.floor(Math.random() * boxes.length);
+    boxes[index].style.display = 'block';
     boxes[index].style.backgroundColor = color;
     boxes.splice(index, 1);
     num--;
@@ -40,14 +41,21 @@ const initializeGame = function() {
   sendXHR('GET', 'initialize', () => {});
 };
 
+const sendColors = function() {
+  const className = localStorage.getItem('className');
+  const boxes = document.querySelectorAll(`.${className}`);
+  const colors = [...boxes].map(box => box.style.backgroundColor);
+  if (colors.includes('')) return;
+  sendXHR('POST', 'checkWinStatus', showGameStatus, colors, className);
+  const button = document.getElementById('try');
+  button.parentNode.removeChild(button);
+};
+
 const changeColor = function() {
   const color = localStorage.getItem('color');
   event.target.style.backgroundColor = color;
   const className = event.target.className.split(' ')[2];
-  const boxes = document.querySelectorAll(`.${className}`);
-  const colors = [...boxes].map(box => box.style.backgroundColor);
-  if (!colors.includes(''))
-    sendXHR('POST', 'checkWinStatus', showGameStatus, colors, className);
+  localStorage.setItem('className', className);
 };
 
 const storeSelectedColor = function() {
