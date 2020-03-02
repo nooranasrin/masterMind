@@ -9,6 +9,15 @@ const changeRow = function() {
   makeTheCurrentRowActive(localStorage.getItem('row'));
 };
 
+const generateNewButton = function(row) {
+  const currentRow = document.getElementById(`${row}`);
+  const button = document.createElement('button');
+  button.id = 'try';
+  button.innerText = 'TRY';
+  button.addEventListener('click', sendColors);
+  currentRow.appendChild(button);
+};
+
 const selectRandomBox = function(count, hindBoxes, color) {
   let num = count;
   let boxes = hindBoxes;
@@ -29,6 +38,8 @@ const showGameStatus = function(status, className) {
   hindBoxes = selectRandomBox(wrongPlace, hindBoxes, 'grey');
   hindBoxes = selectRandomBox(wrong, hindBoxes, 'white');
   changeRow();
+  generateNewButton(localStorage.getItem('row'));
+  localStorage.removeItem('color');
 };
 
 const sendXHR = (method, url, callback, data, args) => {
