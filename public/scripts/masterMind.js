@@ -48,6 +48,7 @@ const sendColors = function() {
   if (colors.includes('')) return;
   sendXHR('POST', 'checkWinStatus', showGameStatus, colors, className);
   const button = document.getElementById('try');
+  button.parentNode.classList.add('pointerEvents');
   button.parentNode.removeChild(button);
 };
 
