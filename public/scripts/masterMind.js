@@ -1,3 +1,14 @@
+const makeTheCurrentRowActive = function(row) {
+  const currentRow = document.getElementById(`${row}`);
+  currentRow.classList.add('pointerEventsAll');
+};
+
+const changeRow = function() {
+  const row = +localStorage.getItem('row');
+  localStorage.setItem('row', row + 1);
+  makeTheCurrentRowActive(localStorage.getItem('row'));
+};
+
 const selectRandomBox = function(count, hindBoxes, color) {
   let num = count;
   let boxes = hindBoxes;
@@ -17,6 +28,7 @@ const showGameStatus = function(status, className) {
   hindBoxes = selectRandomBox(correct, hindBoxes, 'black');
   hindBoxes = selectRandomBox(wrongPlace, hindBoxes, 'grey');
   hindBoxes = selectRandomBox(wrong, hindBoxes, 'white');
+  changeRow();
 };
 
 const sendXHR = (method, url, callback, data, args) => {
@@ -37,15 +49,17 @@ const sendXHR = (method, url, callback, data, args) => {
   };
 };
 
-const makeTheCurrentRowActive = function(row) {
-  const currentRow = document.getElementById(`${row}`);
-  currentRow.classList.add('pointerEventsAll');
-};
-
 const initializeGame = function() {
   sendXHR('GET', 'initialize', () => {});
   localStorage.setItem('row', 1);
   makeTheCurrentRowActive(localStorage.getItem('row'));
+};
+
+const deleteButtonAndMakeTheRowInactive = function() {
+  const button = document.getElementById('try');
+  button.parentNode.classList.remove('pointerEventsAll');
+  button.parentNode.classList.add('pointerEventsNone');
+  button.parentNode.removeChild(button);
 };
 
 const sendColors = function() {
@@ -54,9 +68,7 @@ const sendColors = function() {
   const colors = [...boxes].map(box => box.style.backgroundColor);
   if (colors.includes('')) return;
   sendXHR('POST', 'checkWinStatus', showGameStatus, colors, className);
-  const button = document.getElementById('try');
-  button.parentNode.classList.add('pointerEventsNone');
-  button.parentNode.removeChild(button);
+  deleteButtonAndMakeTheRowInactive();
 };
 
 const changeColor = function() {
