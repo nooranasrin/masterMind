@@ -1,8 +1,24 @@
-const showGameStatus = function(responseText) {
-  console.log(responseText);
+const selectRandomBox = function(count, hindBoxes, color) {
+  let num = count;
+  let boxes = hindBoxes;
+  while (num > 0) {
+    const index = Math.floor(Math.random() * boxes.length);
+    boxes[index].style.backgroundColor = color;
+    boxes.splice(index, 1);
+    num--;
+  }
+  return boxes;
 };
 
-const sendXHR = (method, url, callback, data) => {
+const showGameStatus = function(status, className) {
+  const { correct, wrongPlace, wrong } = status;
+  let hindBoxes = [...document.querySelectorAll(`.${className}Hints`)];
+  hindBoxes = selectRandomBox(correct, hindBoxes, 'black');
+  hindBoxes = selectRandomBox(wrongPlace, hindBoxes, 'grey');
+  hindBoxes = selectRandomBox(wrong, hindBoxes, 'white');
+};
+
+const sendXHR = (method, url, callback, data, args) => {
   const req = new XMLHttpRequest();
   req.open(method, url);
   data && req.setRequestHeader('Content-Type', 'application/json');
@@ -16,7 +32,7 @@ const sendXHR = (method, url, callback, data) => {
     if ('application/json; charset=utf-8' === contentType) {
       result = JSON.parse(this.responseText);
     }
-    callback(result);
+    callback(result, args);
   };
 };
 
@@ -31,7 +47,7 @@ const changeColor = function() {
   const boxes = document.querySelectorAll(`.${className}`);
   const colors = [...boxes].map(box => box.style.backgroundColor);
   if (!colors.includes(''))
-    sendXHR('POST', 'checkWinStatus', showGameStatus, colors);
+    sendXHR('POST', 'checkWinStatus', showGameStatus, colors, className);
 };
 
 const storeSelectedColor = function() {
