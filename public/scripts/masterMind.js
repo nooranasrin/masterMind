@@ -9,13 +9,16 @@ const changeRow = function() {
   makeTheCurrentRowActive(localStorage.getItem('row'));
 };
 
-const generateNewButton = function(row) {
-  const currentRow = document.getElementById(`${row}`);
-  const button = document.createElement('button');
-  button.id = 'try';
-  button.innerText = 'TRY';
-  button.addEventListener('click', sendColors);
-  currentRow.appendChild(button);
+const createNode = function(html) {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.firstChild;
+};
+
+const generateNewButton = function() {
+  const currentRow = document.getElementById(localStorage.getItem('row'));
+  const button = '<button id="try" onclick="sendColors()">TRY</button>';
+  currentRow.appendChild(createNode(button));
 };
 
 const showSecretPattern = function(secretColors) {
@@ -27,10 +30,7 @@ const showSecretPattern = function(secretColors) {
 
 const showWinMessage = function(row) {
   const currentRow = document.getElementById(`${row}`);
-  const div = document.createElement('div');
-  div.id = 'winMessage';
-  div.innerText = 'You Won';
-  currentRow.appendChild(div);
+  currentRow.appendChild(createNode('<div id="winMessage">You Won</div>'));
   sendXHR('GET', 'secretPattern', showSecretPattern);
 };
 
@@ -47,26 +47,24 @@ const selectRandomBox = function(count, hindBoxes, color) {
   return boxes;
 };
 
-const showGameStatus = function(status, className) {
-  const { correct, wrongPlace, wrong } = status;
-  let hindBoxes = [...document.querySelectorAll(`.${className}Hints`)];
-  console.log(localStorage.getItem('row'));
-  if (localStorage.getItem('row') === '10')
-    sendXHR('GET', 'secretPattern', showSecretPattern);
-  if (correct === 5) return showWinMessage(localStorage.getItem('row'));
-  hindBoxes = selectRandomBox(correct, hindBoxes, 'black');
-  hindBoxes = selectRandomBox(wrongPlace, hindBoxes, 'grey');
-  hindBoxes = selectRandomBox(wrong, hindBoxes, 'white');
+const showGameStatus = function(status) {
+  const row = localStorage.getItem('row');
+  let hindBoxes = [...document.getElementById(row).querySelectorAll('.hints')];
+  if (row === '10') sendXHR('GET', 'secretPattern', showSecretPattern);
+  if (status.correct === 5) return showWinMessage(row);
+  hindBoxes = selectRandomBox(status.correct, hindBoxes, 'black');
+  hindBoxes = selectRandomBox(status.wrongPlace, hindBoxes, 'grey');
+  hindBoxes = selectRandomBox(status.wrong, hindBoxes, 'white');
   changeRow();
-  generateNewButton(localStorage.getItem('row'));
+  generateNewButton();
   localStorage.removeItem('color');
 };
 
-const sendXHR = (method, url, callback, data, args) => {
+const sendXHR = (method, url, callback, data) => {
   const req = new XMLHttpRequest();
   req.open(method, url);
   data && req.setRequestHeader('Content-Type', 'application/json');
-  const content = data ? JSON.stringify(data, null, 2) : null;
+  const content = data ? JSON.stringify(data) : null;
   req.send(content);
 
   req.onload = function() {
@@ -76,7 +74,7 @@ const sendXHR = (method, url, callback, data, args) => {
     if ('application/json; charset=utf-8' === contentType) {
       result = JSON.parse(this.responseText);
     }
-    callback(result, args);
+    callback(result);
   };
 };
 
@@ -98,7 +96,7 @@ const sendColors = function() {
   const boxes = document.querySelectorAll(`.${className}`);
   const colors = [...boxes].map(box => box.style.backgroundColor);
   if (colors.includes('')) return;
-  sendXHR('POST', 'checkWinStatus', showGameStatus, colors, className);
+  sendXHR('POST', 'checkWinStatus', showGameStatus, colors);
   deleteButtonAndMakeTheRowInactive();
 };
 
