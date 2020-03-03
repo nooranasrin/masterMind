@@ -18,6 +18,22 @@ const generateNewButton = function(row) {
   currentRow.appendChild(button);
 };
 
+const showSecretPattern = function(secretColors) {
+  const secretBoxes = [...document.getElementsByClassName('secretBox')];
+  secretBoxes.forEach(
+    (box, index) => (box.style.backgroundColor = secretColors[index])
+  );
+};
+
+const showWinMessage = function(row) {
+  const currentRow = document.getElementById(`${row}`);
+  const div = document.createElement('div');
+  div.id = 'winMessage';
+  div.innerText = 'You Won';
+  currentRow.appendChild(div);
+  sendXHR('GET', 'secretPattern', showSecretPattern);
+};
+
 const selectRandomBox = function(count, hindBoxes, color) {
   let num = count;
   let boxes = hindBoxes;
@@ -34,6 +50,10 @@ const selectRandomBox = function(count, hindBoxes, color) {
 const showGameStatus = function(status, className) {
   const { correct, wrongPlace, wrong } = status;
   let hindBoxes = [...document.querySelectorAll(`.${className}Hints`)];
+  console.log(localStorage.getItem('row'));
+  if (localStorage.getItem('row') === '10')
+    sendXHR('GET', 'secretPattern', showSecretPattern);
+  if (correct === 5) return showWinMessage(localStorage.getItem('row'));
   hindBoxes = selectRandomBox(correct, hindBoxes, 'black');
   hindBoxes = selectRandomBox(wrongPlace, hindBoxes, 'grey');
   hindBoxes = selectRandomBox(wrong, hindBoxes, 'white');

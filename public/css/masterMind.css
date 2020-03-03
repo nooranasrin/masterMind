@@ -33,6 +33,8 @@ body {
 #secretPattern {
   border-radius: 8px;
   margin-bottom: 10px;
+  background-color: ivory;
+  width: 64%;
 }
 
 .colorBox {
@@ -44,7 +46,8 @@ body {
 }
 
 .secretBox {
-  background-color: lightgray;
+  width: 10%;
+  box-shadow: rgb(110, 110, 105) 1.5px 1.5px 1.5px;
 }
 
 .patternPlacingDiv {
@@ -84,4 +87,9 @@ body {
 
 .pointerEventsAll {
   pointer-events: all;
+}
+
+#winMessage {
+  margin-left: 50px;
+  font-style: italic;
 }
