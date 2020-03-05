@@ -78,11 +78,6 @@ const sendXHR = (method, url, callback, data) => {
   };
 };
 
-const initializeGame = function() {
-  sendXHR('GET', 'initialize', () => {});
-  makeTheCurrentRowActive(localStorage.getItem('row'));
-};
-
 const deleteButtonAndMakeTheRowInactive = function() {
   const button = document.getElementById('try');
   button.parentNode.classList.remove('pointerEventsAll');
@@ -141,6 +136,7 @@ const generateColorSelectionBoxes = function(allColors) {
 const main = function() {
   localStorage.setItem('row', 1);
   generatePatternDiv();
-  initializeGame();
+  sendXHR('GET', 'initialize', () => {});
+  makeTheCurrentRowActive(localStorage.getItem('row'));
   sendXHR('GET', 'colors', generateColorSelectionBoxes);
 };
