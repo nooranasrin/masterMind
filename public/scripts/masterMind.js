@@ -80,7 +80,6 @@ const sendXHR = (method, url, callback, data) => {
 
 const initializeGame = function() {
   sendXHR('GET', 'initialize', () => {});
-  localStorage.setItem('row', 1);
   makeTheCurrentRowActive(localStorage.getItem('row'));
 };
 
@@ -92,8 +91,8 @@ const deleteButtonAndMakeTheRowInactive = function() {
 };
 
 const sendColors = function() {
-  const className = localStorage.getItem('className');
-  const boxes = document.querySelectorAll(`.${className}`);
+  const row = localStorage.getItem('row');
+  const boxes = document.getElementById(row).querySelectorAll(`.colorBox`);
   const colors = [...boxes].map(box => box.style.backgroundColor);
   if (colors.includes('')) return;
   sendXHR('POST', 'checkWinStatus', showGameStatus, colors);
@@ -103,11 +102,35 @@ const sendColors = function() {
 const changeColor = function() {
   const color = localStorage.getItem('color');
   event.target.style.backgroundColor = color;
-  const className = event.target.className.split(' ')[2];
-  localStorage.setItem('className', className);
 };
 
 const storeSelectedColor = function() {
   const color = event.target.style.backgroundColor;
   localStorage.setItem('color', color);
+};
+
+const generateColorPlacingBoxes = function(div, html) {
+  for (let count = 0; count < 5; count++) {
+    div.appendChild(createNode(html));
+  }
+  return div;
+};
+
+const generatePatternDiv = function() {
+  const colorBoxes = document.getElementById('colorBoxes');
+  for (let row = 10; row > 0; row--) {
+    let patternDiv = `<div class="patternDiv patternPlacingDiv " id="${row}">`;
+    const colorBox = `<div class="colorBox selectedColor" onclick="changeColor()"></div>`;
+    const hints = `<div class="hints"></div>`;
+    patternDiv = generateColorPlacingBoxes(createNode(patternDiv), colorBox);
+    patternDiv = generateColorPlacingBoxes(patternDiv, hints);
+    colorBoxes.append(patternDiv);
+  }
+  generateNewButton('1');
+};
+
+const main = function() {
+  localStorage.setItem('row', 1);
+  generatePatternDiv();
+  initializeGame();
 };

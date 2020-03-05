@@ -45,9 +45,24 @@ body {
   border: 1px solid black;
 }
 
+#colorBoxes {
+  height: 90%;
+  margin-bottom: -50px;
+}
+
+.selectedColor {
+  height: 65%;
+  cursor: pointer;
+  box-shadow: rgb(110, 110, 105) 1.5px 1.5px 1.5px;
+}
+
 .secretBox {
   width: 10%;
   box-shadow: rgb(110, 110, 105) 1.5px 1.5px 1.5px;
+}
+
+#colors {
+  margin-top: -80px;
 }
 
 .patternPlacingDiv {
