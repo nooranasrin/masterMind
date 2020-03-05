@@ -12,7 +12,7 @@ const changeRow = function() {
 const createNode = function(html) {
   const div = document.createElement('div');
   div.innerHTML = html;
-  return div.firstChild;
+  return div.firstElementChild;
 };
 
 const generateNewButton = function() {
@@ -109,11 +109,13 @@ const storeSelectedColor = function() {
   localStorage.setItem('color', color);
 };
 
-const generateColorPlacingBoxes = function(div, html) {
+const generateColorPlacingBoxes = function(div, colorBox, hints) {
+  const patternDiv = createNode(div);
   for (let count = 0; count < 5; count++) {
-    div.appendChild(createNode(html));
+    patternDiv.prepend(createNode(colorBox));
+    patternDiv.appendChild(createNode(hints));
   }
-  return div;
+  return patternDiv;
 };
 
 const generatePatternDiv = function() {
@@ -122,15 +124,23 @@ const generatePatternDiv = function() {
     let patternDiv = `<div class="patternDiv patternPlacingDiv " id="${row}">`;
     const colorBox = `<div class="colorBox selectedColor" onclick="changeColor()"></div>`;
     const hints = `<div class="hints"></div>`;
-    patternDiv = generateColorPlacingBoxes(createNode(patternDiv), colorBox);
-    patternDiv = generateColorPlacingBoxes(patternDiv, hints);
+    patternDiv = generateColorPlacingBoxes(patternDiv, colorBox, hints);
     colorBoxes.append(patternDiv);
   }
   generateNewButton('1');
+};
+
+const generateColorSelectionBoxes = function(allColors) {
+  const colorBoxes = document.getElementById('colors');
+  allColors.forEach(color => {
+    const html = ` <div class='colorBox boxExceptSecretBox' onclick='storeSelectedColor()' style='background-color:${color};'></div>`;
+    colorBoxes.append(createNode(html));
+  });
 };
 
 const main = function() {
   localStorage.setItem('row', 1);
   generatePatternDiv();
   initializeGame();
+  sendXHR('GET', 'colors', generateColorSelectionBoxes);
 };
